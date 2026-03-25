@@ -54,10 +54,7 @@ def contact():
 
 @app.route('/admin')
 def admin():
-    admin_key = os.environ.get("ADMIN_KEY", "admin123")
-    password = request.args.get('key')
-    if password != admin_key:
-        return "Unauthorized"
+ 
     cur.execute("SELECT * FROM contacts ORDER BY id DESC")
     data = cur.fetchall()
     return render_template("admin.html", data=data)
