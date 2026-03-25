@@ -1,20 +1,32 @@
 import os
 from flask import Flask, render_template, request, jsonify
 import psycopg2
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 
-# PostgreSQL connection using environment variables
+# --- Parse PostgreSQL URL ---
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://varghese_user:DHuhZi1Ec1Olz1R88fx4CxdVwErnm6v2@dpg-d71sr9oule4c73d34v6g-a/varghese")
+
+result = urlparse(DATABASE_URL)
+
+db_host = result.hostname
+db_port = result.port or 5432
+db_name = result.path[1:]  # remove leading '/'
+db_user = result.username
+db_password = result.password
+
+# --- Connect to PostgreSQL ---
 conn = psycopg2.connect(
-    host=os.environ.get("DB_HOST"),
-    port=os.environ.get("DB_PORT"),
-    database=os.environ.get("DB_NAME"),
-    user=os.environ.get("DB_USER"),
-    password=os.environ.get("DB_PASSWORD")
+    host=db_host,
+    port=db_port,
+    database=db_name,
+    user=db_user,
+    password=db_password
 )
 cur = conn.cursor()
 
-# Create table if it doesn't exist
+# --- Create contacts table if it doesn't exist ---
 cur.execute("""
 CREATE TABLE IF NOT EXISTS contacts (
     id SERIAL PRIMARY KEY,
@@ -25,12 +37,11 @@ CREATE TABLE IF NOT EXISTS contacts (
 """)
 conn.commit()
 
-# Home route
+# --- Routes ---
 @app.route('/')
 def home():
     return render_template('index.html')
 
-# Contact form submission
 @app.route('/contact', methods=['POST'])
 def contact():
     data = request.json
@@ -41,11 +52,11 @@ def contact():
     conn.commit()
     return jsonify({"message": "Message saved successfully!"})
 
-# Admin panel route
 @app.route('/admin')
 def admin():
+    admin_key = os.environ.get("ADMIN_KEY", "admin123")
     password = request.args.get('key')
-    if password != os.environ.get("ADMIN_KEY", "admin123"):
+    if password != admin_key:
         return "Unauthorized"
     cur.execute("SELECT * FROM contacts ORDER BY id DESC")
     data = cur.fetchall()
