@@ -1,32 +1,19 @@
 import os
 from flask import Flask, render_template, request, jsonify
 import psycopg2
-from urllib.parse import urlparse
 
 app = Flask(__name__)
 
 # --- Get DATABASE_URL from environment ---
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# --- Parse DB URL ---
-result = urlparse(DATABASE_URL)
-
-db_host = result.hostname
-db_port = result.port or 5432
-db_name = result.path[1:]
-db_user = result.username
-db_password = result.password
+if not DATABASE_URL:
+    raise ValueError("❌ DATABASE_URL is not set in environment variables")
 
 
 # --- Function to get DB connection ---
 def get_db_connection():
-    return psycopg2.connect(
-        host=db_host,
-        port=db_port,
-        database=db_name,
-        user=db_user,
-        password=db_password
-    )
+    return psycopg2.connect(DATABASE_URL)
 
 
 # --- Initialize DB (create table if not exists) ---
@@ -48,8 +35,10 @@ def init_db():
     conn.close()
 
 
-# Run DB init once on startup
-init_db()
+# ✅ Run DB init safely (only when app starts serving)
+@app.before_first_request
+def setup():
+    init_db()
 
 
 # --- Routes ---
