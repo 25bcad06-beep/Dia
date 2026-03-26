@@ -1,5 +1,5 @@
 /* =========================
-   🌍 Global Styles
+   🌌 Global (Dark Modern UI)
 ========================= */
 * {
     margin: 0;
@@ -8,9 +8,9 @@
 }
 
 body {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #eef2ff, #f8fafc);
-    color: #1e293b;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #0f172a, #020617);
+    color: #e2e8f0;
     line-height: 1.6;
 }
 
@@ -18,11 +18,18 @@ body {
    🔝 Header
 ========================= */
 header {
-    background: linear-gradient(120deg, #6366f1, #3b82f6);
-    color: white;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
     text-align: center;
     padding: 30px 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(90deg, #22d3ee, #a78bfa);
+    -webkit-background-clip: text;
+    color: transparent;
 }
 
 /* =========================
@@ -30,32 +37,29 @@ header {
 ========================= */
 .hero {
     text-align: center;
-    padding: 80px 20px;
-}
-
-.hero h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+    padding: 90px 20px;
 }
 
 .hero p {
-    color: #475569;
+    color: #94a3b8;
     font-size: 1.1rem;
 }
 
 /* =========================
-   📦 Sections (Glass Effect)
+   📦 Sections (Neon Card UI)
 ========================= */
 section {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    margin: 25px auto;
+    background: rgba(15, 23, 42, 0.6);
+    margin: 30px auto;
     padding: 35px;
     max-width: 850px;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px);
     transition: all 0.6s ease;
 }
 
@@ -65,17 +69,28 @@ section.visible {
 }
 
 section:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 0 30px rgba(167,139,250,0.3);
 }
 
 /* =========================
    📝 Headings
 ========================= */
 h2 {
-    color: #1e293b;
     margin-bottom: 15px;
     font-weight: 600;
+    color: #e2e8f0;
+    position: relative;
+}
+
+h2::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 3px;
+    margin-top: 6px;
+    background: linear-gradient(90deg, #22d3ee, #a78bfa);
+    border-radius: 10px;
 }
 
 /* =========================
@@ -88,58 +103,68 @@ h2 {
 }
 
 .skills span {
-    background: linear-gradient(135deg, #6366f1, #3b82f6);
-    color: white;
     padding: 8px 16px;
     border-radius: 999px;
     font-size: 13px;
+    background: rgba(34, 211, 238, 0.1);
+    color: #22d3ee;
+    border: 1px solid rgba(34,211,238,0.3);
     transition: all 0.3s ease;
 }
 
 .skills span:hover {
+    background: #22d3ee;
+    color: #020617;
     transform: scale(1.1);
-    box-shadow: 0 4px 10px rgba(99,102,241,0.4);
+    box-shadow: 0 0 10px #22d3ee;
 }
 
 /* =========================
-   📩 Contact Form
+   📩 Form
 ========================= */
 form input,
 form textarea {
     width: 100%;
     margin: 12px 0;
     padding: 12px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    outline: none;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(2, 6, 23, 0.8);
+    color: #e2e8f0;
     font-size: 14px;
-    background: #f8fafc;
+    outline: none;
+}
+
+form input::placeholder,
+form textarea::placeholder {
+    color: #64748b;
 }
 
 form input:focus,
 form textarea:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
+    border-color: #a78bfa;
+    box-shadow: 0 0 8px rgba(167,139,250,0.5);
 }
 
 /* =========================
-   🔘 Button
+   🔘 Button (Neon Glow)
 ========================= */
 button {
     width: 100%;
-    background: linear-gradient(135deg, #6366f1, #3b82f6);
-    color: white;
     padding: 12px;
+    border-radius: 10px;
     border: none;
-    border-radius: 8px;
-    font-size: 15px;
     cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    background: linear-gradient(90deg, #22d3ee, #a78bfa);
+    color: #020617;
     transition: all 0.3s ease;
 }
 
 button:hover {
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 6px 15px rgba(59,130,246,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(167,139,250,0.6);
 }
 
 /* =========================
@@ -148,7 +173,7 @@ button:hover {
 #response {
     margin-top: 10px;
     font-size: 14px;
-    color: #16a34a;
+    color: #4ade80;
 }
 
 /* =========================
@@ -157,21 +182,25 @@ button:hover {
 footer {
     text-align: center;
     padding: 20px;
-    background: #1e293b;
-    color: #cbd5f5;
-    margin-top: 30px;
+    background: rgba(2, 6, 23, 0.9);
+    color: #94a3b8;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 /* =========================
    📱 Responsive
 ========================= */
 @media (max-width: 600px) {
-    .hero h1 {
+    .hero {
+        padding: 60px 15px;
+    }
+
+    header h1 {
         font-size: 2rem;
     }
 
     section {
-        padding: 25px;
         margin: 15px;
+        padding: 25px;
     }
 }
