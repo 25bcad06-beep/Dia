@@ -2,7 +2,9 @@ import os
 from flask import Flask, render_template, request, jsonify
 import psycopg2
 
-app = Flask(__name__)
+# ✅ Force templates folder (important on Render sometimes)
+app = Flask(__name__, template_folder='templates')
+
 
 # --- Get DATABASE_URL from environment ---
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -16,7 +18,7 @@ def get_db_connection():
     return psycopg2.connect(DATABASE_URL)
 
 
-# --- Initialize DB (create table if not exists) ---
+# --- Initialize DB ---
 def init_db():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -35,7 +37,7 @@ def init_db():
     conn.close()
 
 
-# ✅ Initialize DB at startup (Flask 3 compatible)
+# ✅ Initialize DB safely
 with app.app_context():
     init_db()
 
@@ -43,19 +45,23 @@ with app.app_context():
 # --- Routes ---
 @app.route('/')
 def home():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        # 🔥 DEBUG: shows real error instead of blank "Not Found"
+        return f"Error loading template: {str(e)}"
 
 
 @app.route('/contact', methods=['POST'])
 def contact():
-    data = request.json
+    data = request.get_json()
 
     conn = get_db_connection()
     cur = conn.cursor()
 
     cur.execute(
         "INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)",
-        (data['name'], data['email'], data['message'])
+        (data.get('name'), data.get('email'), data.get('message'))
     )
 
     conn.commit()
@@ -77,6 +83,12 @@ def admin():
     conn.close()
 
     return render_template("admin.html", data=data)
+
+
+# --- Health check route (VERY IMPORTANT for debugging) ---
+@app.route('/test')
+def test():
+    return "App is running ✅"
 
 
 # --- Run locally only ---
